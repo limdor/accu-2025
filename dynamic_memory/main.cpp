@@ -6,6 +6,8 @@
 #include <vector>
 #include <array>
 #include <thread>
+#include <future>
+#include <any>
 
 namespace{
     std::atomic<bool> dynamic_memory_allocated{false};
@@ -74,6 +76,10 @@ int main()
     allocation_type();
     std::cout << "std::vector of ints\n";
 
+    const std::vector<std::string> default_constructed_vector;
+    allocation_type();
+    std::cout << "std::vector default ctor\n";
+
     const std::array array_of_ints = {4,3,5,6,7,8,9,10};
     allocation_type();
     if(array_of_ints.size() != 8){
@@ -86,11 +92,41 @@ int main()
     allocation_type();
     std::cout << "std::thread passing void(int) function\n";
 
+    std::promise<void> promise;
+    allocation_type();
+    std::cout << "std::promise default ctor\n";
+    auto future = promise.get_future();
+    allocation_type();
+    std::cout << "promise.get_future\n";
+    promise.set_value();
+    allocation_type();
+    std::cout << "promise.set_value\n";
+    future.get();
+
+    std::future<int> future2;
+    allocation_type();
+    std::cout << "std::future default ctor\n";
+
+    std::any small_any = 42;
+    allocation_type();
+    std::cout << "std::any of 'small' object\n";
+
+    std::any large_any = small_string;
+    allocation_type();
+    std::cout << "std::any of 'large' object\n";
+
     try{
         throw std::runtime_error("my exception");
     }catch(std::exception const& ex){
         allocation_type();
-        std::cout << "throwing and std::runtime_error\n";
+        std::cout << "throwing a std::runtime_error\n";
+    }
+
+    try{
+        throw std::bad_alloc{};
+    }catch(std::exception const& ex){
+        allocation_type();
+        std::cout << "throwing a std::bad_alloc\n";
     }
 
     std::cout << "--------------------------------------------------------------------------------------\n";
