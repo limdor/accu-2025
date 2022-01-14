@@ -27,9 +27,17 @@ that will produce the following output
 ( static):std::string that fits for the small string optimization
 (dynamic):std::string that does not fit for the small string optimization
 (dynamic):std::vector of ints
+( static):std::vector default ctor
 ( static):std::array of ints
 (dynamic):std::thread passing void(int) function
-(dynamic):throwing and std::runtime_error
+(dynamic):std::promise default ctor
+( static):promise.get_future
+( static):promise.set_value
+( static):std::future default ctor
+( static):std::any of 'small' object
+(dynamic):std::any of 'large' object
+(dynamic):throwing a std::runtime_error
+( static):throwing a std::bad_alloc
 --------------------------------------------------------------------------------------
 --------- End of the examples, feel free to add more cases ---------------------------
 --------------------------------------------------------------------------------------
