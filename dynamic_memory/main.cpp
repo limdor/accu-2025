@@ -9,6 +9,8 @@
 #include <future>
 #include <any>
 
+#include <boost/stacktrace.hpp>
+
 namespace{
     std::atomic<bool> dynamic_memory_allocated{false};
 }
@@ -29,6 +31,7 @@ void *operator new(std::size_t count, std::align_val_t al)
 void allocation_type(){
     if(dynamic_memory_allocated){
         std::cout << "(dynamic):";
+        std::cout << "    " << boost::stacktrace::stacktrace();
     } else{
         std::cout << "( static):";
     }
