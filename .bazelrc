@@ -21,7 +21,7 @@ build --disk_cache=~/.bazel/disk_cache/
 #################################
 
 # Verbose output to know what toolchains are selected
-build --toolchain_resolution_debug
+# build --toolchain_resolution_debug
 
 ###################################
 ## Config options for toolchains ##
@@ -32,3 +32,12 @@ build --action_env=BAZEL_DO_NOT_DETECT_CPP_TOOLCHAIN=1
 
 # Do not use the deprecated toolchain resolution system with --cpu and --crosstool_top
 build --incompatible_enable_cc_toolchain_resolution
+
+######################
+## Bazel registries ##
+######################
+
+# Required for boost
+common --registry=https://raw.githubusercontent.com/bazelboost/registry/main
+# Bazel central registry for other dependencies
+common --registry=https://bcr.bazel.build
