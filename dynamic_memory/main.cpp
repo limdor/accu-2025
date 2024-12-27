@@ -9,6 +9,7 @@
 #include <future>
 #include <string_view>
 #include <any>
+#include <stacktrace>
 
 namespace
 {
@@ -211,6 +212,11 @@ int main()
         catch (std::exception const &ex)
         {
         }
+    }
+
+    {
+        AllocationTracker tracker{"Getting the current std::stacktrace"};
+        std::stacktrace::current();
     }
 
     std::cout << "--------------------------------------------------------------------------------------\n";
