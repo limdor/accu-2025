@@ -80,7 +80,7 @@ cc_toolchain_config(
         "/usr/include/c++/14",
         "/usr/include/x86_64-linux-gnu/c++/14",
     ],
-    cxx_flags = ["-std=c++20"],
+    cxx_flags = ["-std=c++23"],
     dbg_compile_flags = ["-g"],
     host_system_name = "local",
     link_flags = [
