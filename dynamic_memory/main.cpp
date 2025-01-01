@@ -193,7 +193,7 @@ int main()
     }
 
     {
-        AllocationTracker tracker{"throwing a std::runtime_error"};
+        AllocationTracker tracker{"throwing a std::runtime_error with small string literal as message"};
         try
         {
             throw std::runtime_error("my exception");

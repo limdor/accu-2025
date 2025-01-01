@@ -1,5 +1,5 @@
-load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 load("@rules_cc//cc:defs.bzl", "cc_library", "cc_toolchain")
+load(":cc_toolchain_config.bzl", "cc_toolchain_config")
 
 package(default_visibility = ["//visibility:public"])
 
@@ -93,6 +93,8 @@ cc_toolchain_config(
     ],
     link_libs = [
         "-lstdc++",
+        # Required for C++23 stacktrace
+        "-lstdc++exp",
         "-lm",
     ],
     opt_compile_flags = [
