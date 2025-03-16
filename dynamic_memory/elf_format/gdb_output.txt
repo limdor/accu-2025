@@ -1,0 +1,61 @@
+limdor@XaviZenbook:~/dynamic_memory$ gdb bazel-bin/dynamic_memory/elf_format/main
+GNU gdb (Ubuntu 15.0.50.20240403-0ubuntu1) 15.0.50.20240403-git
+Copyright (C) 2024 Free Software Foundation, Inc.
+License GPLv3+: GNU GPL version 3 or later <http://gnu.org/licenses/gpl.html>
+This is free software: you are free to change and redistribute it.
+There is NO WARRANTY, to the extent permitted by law.
+Type "show copying" and "show warranty" for details.
+This GDB was configured as "x86_64-linux-gnu".
+Type "show configuration" for configuration details.
+For bug reporting instructions, please see:
+<https://www.gnu.org/software/gdb/bugs/>.
+Find the GDB manual and other documentation resources online at:
+    <http://www.gnu.org/software/gdb/documentation/>.
+
+For help, type "help".
+Type "apropos word" to search for commands related to "word"...
+Reading symbols from bazel-bin/dynamic_memory/elf_format/main...
+(gdb) starti
+Starting program: /home/limdor/.cache/bazel/_bazel_limdor/7847781caf1fd5388b007bf353d8df72/execroot/_main/bazel-out/k8-dbg/bin/dynamic_memory/elf_format/main 
+
+This GDB supports auto-downloading debuginfo from the following URLs:
+  <https://debuginfod.ubuntu.com>
+Enable debuginfod for this session? (y or [n]) y
+Debuginfod has been enabled.
+To make this setting permanent, add 'set debuginfod enabled on' to .gdbinit.
+Downloading separate debug info for system-supplied DSO at 0x7ffff7fc3000
+                                                                                                                                                                                                         
+Program stopped.
+0x00007ffff7fe4540 in _start () from /lib64/ld-linux-x86-64.so.2
+(gdb) info proc mappings
+process 15316
+Mapped address spaces:
+
+          Start Addr           End Addr       Size     Offset  Perms  objfile
+      0x555555554000     0x555555555000     0x1000        0x0  r-xp   /home/limdor/.cache/bazel/_bazel_limdor/7847781caf1fd5388b007bf353d8df72/execroot/_main/bazel-out/k8-dbg/bin/dynamic_memory/elf_format/main
+      0x555555555000     0x555555557000     0x2000        0x0  rw-p   /home/limdor/.cache/bazel/_bazel_limdor/7847781caf1fd5388b007bf353d8df72/execroot/_main/bazel-out/k8-dbg/bin/dynamic_memory/elf_format/main
+      0x7ffff7fbf000     0x7ffff7fc3000     0x4000        0x0  r--p   [vvar]
+      0x7ffff7fc3000     0x7ffff7fc5000     0x2000        0x0  r-xp   [vdso]
+      0x7ffff7fc5000     0x7ffff7fc6000     0x1000        0x0  r--p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7ffff7fc6000     0x7ffff7ff1000    0x2b000     0x1000  r-xp   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7ffff7ff1000     0x7ffff7ffb000     0xa000    0x2c000  r--p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7ffff7ffb000     0x7ffff7fff000     0x4000    0x36000  rw-p   /usr/lib/x86_64-linux-gnu/ld-linux-x86-64.so.2
+      0x7ffffffde000     0x7ffffffff000    0x21000        0x0  rw-p   [stack]
+(gdb) info address c_foo
+Symbol "c_foo" is static storage at address 0x555555555d78.
+(gdb) info address sc_foo
+Symbol "sc_foo" is static storage at address 0x555555555d80.
+(gdb) info address bar
+Symbol "bar" is static storage at address 0x55555555601c.
+(gdb) info address s_bar
+Symbol "s_bar" is static storage at address 0x555555556020.
+(gdb) info address d
+Symbol "d" is static storage at address 0x555555556010.
+(gdb) info address s_d
+Symbol "s_d" is static storage at address 0x555555556014.
+(gdb) info address c_d
+Symbol "c_d" is static storage at address 0x555555554708.
+(gdb) info address sc_d
+Symbol "sc_d" is static storage at address 0x55555555470c.
+(gdb) info address main
+Symbol "main()" is a function at address 0x5555555546d9.
