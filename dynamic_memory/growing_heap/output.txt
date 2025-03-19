@@ -1,0 +1,90 @@
+limdor@XaviZenbook:~/dynamic_memory$ bazel run //dynamic_memory/growing_heap:main
+INFO: Invocation ID: f92bbe80-580c-4dbf-99d5-48fc2f68fffc
+INFO: Analyzed target //dynamic_memory/growing_heap:main (0 packages loaded, 0 targets configured).
+INFO: Found 1 target...
+Target //dynamic_memory/growing_heap:main up-to-date:
+  bazel-bin/dynamic_memory/growing_heap/main
+INFO: Elapsed time: 0.133s, Critical Path: 0.00s
+INFO: 1 process: 1 internal.
+INFO: Build completed successfully, 1 total action
+INFO: Running command line: bazel-bin/dynamic_memory/growing_heap/main
+Process started with pid 41035
+--- Heap memory region info for pid 41035 (start) ---
+Pathname: [heap]        Size: 135168 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983837184 (0x557e13a54000)
+--- Heap memory region info (end) ---
+
+What would you like to do?
+ a - Allocate
+ i - Random initialize memory
+ p - Print pointer addresses
+ d - Deallocate
+ q - Quit
+a
+How many bytes would you like to allocate? 50000
+Allocating an array of 12500 elements with a total size of 50000 bytes
+Total amount allocated until now: 50000 bytes
+--- Heap memory region info for pid 41035 (start) ---
+Pathname: [heap]        Size: 270336 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983972352 (0x557e13a75000)
+--- Heap memory region info (end) ---
+
+What would you like to do?
+ a - Allocate
+ i - Random initialize memory
+ p - Print pointer addresses
+ d - Deallocate
+ q - Quit
+a
+How many bytes would you like to allocate? 100000
+Allocating an array of 25000 elements with a total size of 100000 bytes
+Total amount allocated until now: 150000 bytes
+--- Heap memory region info for pid 41035 (start) ---
+Pathname: [heap]        Size: 270336 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983972352 (0x557e13a75000)
+--- Heap memory region info (end) ---
+
+What would you like to do?
+ a - Allocate
+ i - Random initialize memory
+ p - Print pointer addresses
+ d - Deallocate
+ q - Quit
+a
+How many bytes would you like to allocate? 200000
+Allocating an array of 50000 elements with a total size of 200000 bytes
+Total amount allocated until now: 350000 bytes
+--- Heap memory region info for pid 41035 (start) ---
+Pathname: [heap]        Size: 270336 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983972352 (0x557e13a75000)
+--- Heap memory region info (end) ---
+
+What would you like to do?
+ a - Allocate
+ i - Random initialize memory
+ p - Print pointer addresses
+ d - Deallocate
+ q - Quit
+p
+50000 bytes at 0x557e13a47cc0
+Pathname: [heap]        Size: 270336 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983972352 (0x557e13a75000)
+100000 bytes at 0x557e13a54020
+Pathname: [heap]        Size: 270336 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983972352 (0x557e13a75000)
+200000 bytes at 0x7f4781bc8010
+Pathname:       Size: 221184 bytes
+Start address: 139945096019968 (0x7f4781bc8000)
+End address: 139945096241152 (0x7f4781bfe000)
+Total amount allocated until now: 350000 bytes
+--- Heap memory region info for pid 41035 (start) ---
+Pathname: [heap]        Size: 270336 bytes
+Start address: 93999983702016 (0x557e13a33000)
+End address: 93999983972352 (0x557e13a75000)
+--- Heap memory region info (end) ---
