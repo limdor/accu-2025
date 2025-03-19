@@ -32,7 +32,7 @@ auto print_error(const std::string &error)
 
 auto print_region_information(memory_mapped_region_information region_information)
 {
-    std::cout << "Pathname: " << region_information.pathname << "\n";
+    std::cout << "Pathname: " << region_information.pathname << "\tSize: " << region_information.end_address - region_information.start_address << " bytes\n";
     std::cout << "Start address: " << region_information.start_address << " (0x" << std::format("{:x}", region_information.start_address) << ")\n";
     std::cout << "End address: " << region_information.end_address << " (0x" << std::format("{:x}", region_information.end_address) << ")\n";
     return std::expected<void, std::string>{};
@@ -120,7 +120,6 @@ int main()
             }
             break;
         case 'p':
-            // TODO: potentially talk about https://sourceware.org/glibc/wiki/MallocInternals and multiple memory regions for the heap
             for (auto &element : allocation_queue)
             {
                 const auto dec_address = reinterpret_cast<unsigned long>(&element.first[0]);
@@ -129,8 +128,18 @@ int main()
             }
             break;
         case 'd':
-            std::cout << "deallocate\n";
-            break;
+        {
+            if (allocation_queue.size() == 0)
+            {
+                std::cout << "Nothing left to deallocate\n";
+                break;
+            }
+            const auto bytes_to_deallocate = allocation_queue.back().second;
+            std::cout << "Deallocating " << bytes_to_deallocate << " bytes";
+            total_allocated -= bytes_to_deallocate;
+            allocation_queue.pop_back();
+        }
+        break;
         case 'q':
             std::exit(EXIT_SUCCESS);
             break;
