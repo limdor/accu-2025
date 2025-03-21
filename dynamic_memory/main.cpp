@@ -10,31 +10,169 @@
 #include <string_view>
 #include <any>
 #include <stacktrace>
+#include <source_location>
 
 namespace
 {
     std::atomic<bool> g_tracking{false};
     std::atomic<std::size_t> g_allocated_bytes{0};
     std::atomic<std::size_t> g_number_of_allocations{0};
-
 }
 
 void *operator new(std::size_t count)
 {
+    // std::cout << std::source_location::current().function_name() << "\n";
     if (g_tracking)
     {
-        // std::cout << "  -> void *operator new(" << count << ")\n";
         g_allocated_bytes += count;
         g_number_of_allocations++;
     }
-    return malloc(count);
+    void *pointer_to_storage = malloc(count);
+    if (!pointer_to_storage)
+    {
+        // TODO: Handle new_handler
+        throw std::bad_alloc();
+    }
+    return pointer_to_storage;
 }
 
-void *operator new(std::size_t count, std::align_val_t al)
+void *operator new(std::size_t count, std::align_val_t alignment)
 {
-    // std::cout << "  -> void *operator new(" << count << ", " << static_cast<std::size_t>(al) << ")\n";
-    std::cerr << "Still not implemented the forwarding of new with alignment constraints to malloc\n";
-    std::terminate();
+    // std::cout << std::source_location::current().function_name() << "\n";
+    if (g_tracking)
+    {
+        g_allocated_bytes += count;
+        g_number_of_allocations++;
+    }
+    void *pointer_to_storage = aligned_alloc(count, static_cast<std::size_t>(alignment));
+    if (!pointer_to_storage)
+    {
+        // TODO: Handle new_handler
+        throw std::bad_alloc();
+    }
+    return pointer_to_storage;
+}
+
+void *operator new(std::size_t size, const std::nothrow_t &) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    try
+    {
+        return ::operator new(size);
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
+void *operator new(std::size_t size, std::align_val_t alignment, const std::nothrow_t &) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    try
+    {
+        return ::operator new(size, alignment);
+    }
+    catch (...)
+    {
+        return nullptr;
+    }
+}
+
+void *operator new[](std::size_t size)
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    return ::operator new(size);
+}
+
+void *operator new[](std::size_t size, std::align_val_t alignment)
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    return ::operator new(size, alignment);
+}
+
+void *operator new[](std::size_t size, const std::nothrow_t &nothrow) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    return ::operator new(size, nothrow);
+}
+
+void *operator new[](std::size_t size, std::align_val_t alignment, const std::nothrow_t &nothrow) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    return ::operator new(size, alignment, nothrow);
+}
+
+void operator delete(void *ptr) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    free(ptr);
+}
+
+void operator delete(void *ptr, std::size_t) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    free(ptr);
+}
+
+void operator delete(void *ptr, std::align_val_t) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    free(ptr);
+}
+
+void operator delete(void *ptr, std::size_t, std::align_val_t) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    free(ptr);
+}
+
+void operator delete(void *ptr, const std::nothrow_t &) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete(void *ptr, std::align_val_t alignment, const std::nothrow_t &) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete[](void *ptr) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete[](void *ptr, std::size_t) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete[](void *ptr, std::align_val_t) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete[](void *ptr, std::size_t, std::align_val_t) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete[](void *ptr, const std::nothrow_t &) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
+}
+
+void operator delete[](void *ptr, std::align_val_t alignment, const std::nothrow_t &) noexcept
+{
+    // std::cout << std::source_location::current().function_name() << "\n";
+    ::operator delete(ptr);
 }
 
 void reset_allocation_statistics()
@@ -103,6 +241,39 @@ int main()
     std::cout << "--------------------------------------------------------------------------------------\n";
     std::cout << "--------- Examples to understand when dynamic memory allocation is performed ---------\n";
     std::cout << "--------------------------------------------------------------------------------------\n";
+
+    {
+        AllocationTracker tracker{"Dynamic builtin array of 2 integers with extended alignment"};
+        [[maybe_unused]] int *pointer = new alignas(64) int[2]();
+        delete[] (pointer);
+    }
+
+    {
+        AllocationTracker tracker{"Unique pointer of dynamic array of 2 integers with extended alignment"};
+        [[maybe_unused]] const auto pointer = std::make_unique<alignas(64) int[]>(2);
+    }
+
+    {
+        AllocationTracker tracker{"Unique pointer of struct with extended alignment"};
+        struct alignas(64) Foo
+        {
+            int bar{42};
+        };
+
+        const auto pointer = std::make_unique<Foo>();
+    }
+
+    {
+        AllocationTracker tracker{"Dynamic builtin array of 42 integers"};
+        auto *pointer = new int[42];
+        delete[] (pointer);
+    }
+
+    {
+        AllocationTracker tracker{"nothrow new allocation of int"};
+        auto *pointer = new (std::nothrow) int;
+        delete (pointer);
+    }
 
     {
         AllocationTracker tracker{"std::function void(int)"};
