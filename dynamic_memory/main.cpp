@@ -249,8 +249,8 @@ int main()
     }
 
     {
-        AllocationTracker tracker{"Unique pointer of dynamic array of 2 integers with extended alignment"};
-        [[maybe_unused]] const auto pointer = std::make_unique<alignas(64) int[]>(2);
+        AllocationTracker tracker{"Unique pointer of dynamic array of 2 integers"};
+        [[maybe_unused]] const auto pointer = std::make_unique<int[]>(2);
     }
 
     {
