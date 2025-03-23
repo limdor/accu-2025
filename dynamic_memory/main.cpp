@@ -243,8 +243,20 @@ int main()
     std::cout << "--------------------------------------------------------------------------------------\n";
 
     {
+        AllocationTracker tracker{"Dynamic builtin array of 42 integers"};
+        auto *pointer = new int[42];
+        delete[] (pointer);
+    }
+
+    {
+        AllocationTracker tracker{"nothrow new allocation of int"};
+        auto *pointer = new (std::nothrow) int;
+        delete (pointer);
+    }
+
+    {
         AllocationTracker tracker{"Dynamic builtin array of 2 integers with extended alignment"};
-        [[maybe_unused]] int *pointer = new alignas(64) int[2]();
+        [[maybe_unused]] int *pointer = new (std::align_val_t{64}) int[2]();
         delete[] (pointer);
     }
 
@@ -264,15 +276,13 @@ int main()
     }
 
     {
-        AllocationTracker tracker{"Dynamic builtin array of 42 integers"};
-        auto *pointer = new int[42];
-        delete[] (pointer);
+        AllocationTracker tracker{"Unique pointer to int"};
+        [[maybe_unused]] const auto pointer = std::make_unique<int>(2);
     }
 
     {
-        AllocationTracker tracker{"nothrow new allocation of int"};
-        auto *pointer = new (std::nothrow) int;
-        delete (pointer);
+        AllocationTracker tracker{"Shared pointer to int"};
+        [[maybe_unused]] const auto pointer = std::make_shared<int>(2);
     }
 
     {
@@ -281,8 +291,8 @@ int main()
     }
 
     {
-        AllocationTracker tracker{"std::function void(int) calling a member function"};
         universe_t universe;
+        AllocationTracker tracker{"std::function void(int) calling a member function"};
         std::function<void(int)> f_struct_answer_to_live = std::bind(&universe_t::answer_to_live_or_abort, &universe, _1);
     }
 
@@ -297,13 +307,18 @@ int main()
     }
 
     {
+        AllocationTracker tracker{"std::string_view that does not fit for the small string optimization"};
+        [[maybe_unused]] const std::string_view big_string = "my_big_string_that_does_not_fit_for_small_string_optimization";
+    }
+
+    {
         AllocationTracker tracker{"std::vector of ints"};
         const std::vector<int> vector_of_ints = {4, 3, 5, 6, 7, 8, 9, 10};
     }
 
     {
         AllocationTracker tracker{"std::vector default ctor"};
-        const std::vector<std::string> default_constructed_vector;
+        const std::vector<std::string> default_constructed_vector{};
     }
 
     {
@@ -320,6 +335,11 @@ int main()
         AllocationTracker tracker{"std::thread passing void(int) function"};
         std::thread thread{answer_to_live_or_abort, 42};
         thread.join();
+    }
+
+    {
+        AllocationTracker tracker{"std::jthread passing void(int) function"};
+        std::jthread thread{answer_to_live_or_abort, 42};
     }
 
     {
