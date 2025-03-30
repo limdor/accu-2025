@@ -5,7 +5,7 @@
 Build the application with
 
 ```bash
-bazel build //dynamic_memory/elf_format:main -c dbg --copt=-Wno-error
+bazel build //dynamic_memory/elf_format:main -c dbg
 ```
 
 and then, with the following command line the binary can be introspected
