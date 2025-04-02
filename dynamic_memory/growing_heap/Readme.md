@@ -1,9 +1,9 @@
-# Example to illustrate how the stack is growing
+# Example to illustrate how the heap is growing
 
 Run the application with
 
 ```bash
-bazel run //dynamic_memory/growing_stack:main
+bazel run //dynamic_memory/growing_heap:main
 ```
 
 and choos which option do you want:
