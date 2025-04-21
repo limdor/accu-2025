@@ -14,6 +14,7 @@
 
 """A Starlark cc_toolchain configuration rule"""
 
+load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "ACTION_NAMES")
 load(
     "@bazel_tools//tools/cpp:cc_toolchain_config_lib.bzl",
     "action_config",
@@ -26,7 +27,6 @@ load(
     "variable_with_value",
     "with_feature_set",
 )
-load("@bazel_tools//tools/build_defs/cc:action_names.bzl", "ACTION_NAMES")
 
 all_compile_actions = [
     ACTION_NAMES.c_compile,
@@ -117,11 +117,11 @@ def _impl(ctx):
                 actions = all_compile_actions,
                 flag_groups = ([
                     flag_group(
-                        flags = ["-Werror"]
-                    )
-                ])
-            )
-        ]
+                        flags = ["-Werror"],
+                    ),
+                ]),
+            ),
+        ],
     )
     default_compile_flags_feature = feature(
         name = "default_compile_flags",
